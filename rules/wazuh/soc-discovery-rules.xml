@@ -1,0 +1,46 @@
+<!-- Four lab rules extracted from local_rules.xml; vendor sample rule excluded. -->
+<group name="windows,sysmon,process_discovery,">
+  <rule id="100100" level="7">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\tasklist\.exe$</field>
+    <description>Process discovery using tasklist.exe on $(win.system.computer)</description>
+    <mitre>
+      <id>T1057</id>
+    </mitre>
+  </rule>
+</group>
+
+
+<group name="windows,sysmon,system_information_discovery,">
+  <rule id="100101" level="7">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\systeminfo\.exe$</field>
+    <description>System information discovery using systeminfo.exe on $(win.system.computer)</description>
+    <mitre>
+      <id>T1082</id>
+    </mitre>
+  </rule>
+</group>
+
+<group name="windows,sysmon,network_configuration_discovery,">
+  <rule id="100102" level="5">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\ipconfig\.exe$</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(?:^|\s)/all(?:\s|$)</field>
+    <description>Network configuration discovery using ipconfig /all on $(win.system.computer)</description>
+    <mitre>
+      <id>T1016</id>
+    </mitre>
+  </rule>
+</group>
+
+<group name="windows,sysmon,user_discovery,">
+  <rule id="100103" level="5">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\whoami\.exe$</field>
+    <description>User discovery using whoami.exe on $(win.system.computer)</description>
+    <mitre>
+      <id>T1033</id>
+    </mitre>
+  </rule>
+</group>

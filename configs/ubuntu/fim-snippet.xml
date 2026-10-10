@@ -1,0 +1,2 @@
+<!-- Merge inside the existing syscheck block; create the directory first. -->
+<directories check_all="yes" realtime="yes" report_changes="yes">/opt/soc-lab</directories>

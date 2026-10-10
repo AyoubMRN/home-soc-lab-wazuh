@@ -1,0 +1,28 @@
+# Local credentials and enrollment data
+.env
+.env.*
+!.env.example
+*authd.pass*
+client.keys
+*.pem
+*.key
+*.pfx
+*.p12
+credentials*
+secrets*
+# VM disks and snapshots
+*.vdi
+*.vmdk
+*.vhd
+*.vhdx
+*.ova
+*.iso
+*.sav
+Snapshots/
+# Local backups and generated caches
+*.backup*
+*.bak
+*.tmp
+__pycache__/
+.DS_Store
+Thumbs.db
