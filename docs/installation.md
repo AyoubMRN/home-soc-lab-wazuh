@@ -91,3 +91,18 @@ See [Wazuh custom rules](https://documentation.wazuh.com/current/user-manual/rul
 Use Threat Hunting → Events, remove unrelated filters, and choose a time range around execution. Queries in scenario pages use DQL. Open the alert to verify command text, source endpoint, rule and MITRE fields.
 
 This view searches alerts. No visible alert does not establish that a raw event was not collected.
+
+## 8. Preserve a reproducible rebuild
+
+The historical Sysmon XML and Atomic source revision remain unavailable. The following is a checklist for a **new rebuild**, not evidence that the original environment has been reconstructed or that new tests have passed.
+
+Before running a new campaign:
+
+- Save the exact Sysmon XML used, its source and SHA-256 hash. Keep the source file: a configuration displayed by the running service is not a replacement for the original XML.
+- Record the full Git commit SHA for both Atomic Red Team and Invoke-AtomicRedTeam when installed from Git. If installed from an archive or a module package, record its exact release/version, download source and SHA-256 hash instead.
+- Reuse those recorded revisions for subsequent rebuilds. Do not replace the unknown historical revision with a current upstream revision and label it as the original.
+- Record Wazuh, agent, Sysmon, OS and PowerShell versions, alongside the configuration files used.
+- Record each selected test's name, GUID where available, command, expected telemetry and expected Wazuh rule. Compare it with the documented scenario; test numbers may differ between revisions.
+- Rerun the eight scenarios and the two restart checks on the rebuilt environment. Preserve the timestamps, results and reviewed evidence separately from the original campaign.
+
+Review exported files for enrollment secrets, credentials and personal data before publication. A rebuild should be described as validated only after its own checks have passed; until then, the [historical limitations](limitations.md) still apply.
