@@ -1,0 +1,9 @@
+# Preserve the exact archived evidence bytes on Windows and Linux.
+configs/wazuh/snapshots/local_rules.xml -text
+configs/wazuh-native/0095-sshd_rules.xml -text
+configs/sysmon/sysmonconfig.xml -text
+configs/wazuh/windows-agent.conf -text
+tests/fixtures/*.jsonl -text
+tests/fixtures/*.xml -text
+evidence/replay-ssh/*.json -text
+evidence/replay-ssh/*.txt -text
