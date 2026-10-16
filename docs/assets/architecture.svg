@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="310" viewBox="0 0 1000 310" role="img" aria-labelledby="title desc">
+<title id="title">Three-VM SOC lab architecture</title><desc id="desc">Windows Sysmon and PowerShell logs, and Ubuntu SSH and file integrity events, are collected by their Wazuh agents and sent to the Wazuh server. The host uses the dashboard. Private host-only network; separate NAT adapters for outbound access.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0L0 6L9 3z" fill="#217f85"/></marker></defs>
+<rect x="1" y="1" width="998" height="308" rx="12" fill="#f6f8fa" stroke="#d0d7de"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#142b42">
+<text x="30" y="32" font-size="13" font-weight="700" letter-spacing="1">VIRTUALBOX · PRIVATE HOST-ONLY LAB NETWORK</text>
+<rect x="30" y="60" width="245" height="88" rx="9" fill="#fff" stroke="#b7c9d8"/><text x="48" y="87" font-size="18" font-weight="700">Windows endpoint</text><text x="48" y="111" font-size="14">Sysmon + PowerShell · agent 002</text><text x="48" y="132" font-size="13">192.168.56.102</text>
+<rect x="30" y="177" width="245" height="88" rx="9" fill="#fff" stroke="#b7c9d8"/><text x="48" y="204" font-size="18" font-weight="700">Ubuntu endpoint</text><text x="48" y="228" font-size="14">SSH + FIM · agent 001</text><text x="48" y="249" font-size="13">192.168.56.103</text>
+<rect x="430" y="100" width="270" height="125" rx="10" fill="#142b42"/><text x="451" y="132" fill="#fff" font-size="21" font-weight="700">Wazuh server</text><text x="451" y="158" fill="#d8e5ed" font-size="14">Manager · Indexer · Dashboard</text><text x="451" y="183" fill="#8ee0d1" font-size="14">4.14.8 · 192.168.56.101</text><text x="451" y="206" fill="#d8e5ed" font-size="13">Analyse → index → investigate</text>
+<rect x="792" y="124" width="178" height="80" rx="9" fill="#fff" stroke="#b7c9d8"/><text x="811" y="152" font-size="18" font-weight="700">Host computer</text><text x="811" y="176" font-size="13">Dashboard / SSH access</text><text x="811" y="193" font-size="12">192.168.56.1</text>
+<path d="M275 104H345V138H425M275 221H345V188H425" fill="none" stroke="#217f85" stroke-width="2.5" marker-end="url(#arrow)"/><text x="292" y="160" font-size="12">Agent logs</text><text x="292" y="177" font-size="12">TCP 1514</text>
+<path d="M792 164H706" stroke="#217f85" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="30" y="291" font-size="12" fill="#526578">Separate NAT adapters for downloads. No Internet-facing SOC service.</text></g></svg>

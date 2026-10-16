@@ -19,6 +19,9 @@ secrets*
 *.iso
 *.sav
 Snapshots/
+# This is an XML evidence snapshot, not a VirtualBox snapshot directory.
+!configs/wazuh/snapshots/
+!configs/wazuh/snapshots/local_rules.xml
 # Local backups and generated caches
 *.backup*
 *.bak
@@ -26,3 +29,10 @@ Snapshots/
 __pycache__/
 .DS_Store
 Thumbs.db
+# Generated reports and private working material
+/reports/
+/preview/
+Archives-privees/
+captures-v2-selection-privee/
+*.zip
+*.html

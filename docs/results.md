@@ -1,5 +1,7 @@
 # Results and measurement
 
+> Historical V1 campaign. See [V2 results and limits](results-and-limits.md) for the later work. These eight scenarios are not claimed as a new V2 rerun.
+
 ## Scenario outcomes
 
 | Behavior | Initial observation | Final rule / level | Validation |

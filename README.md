@@ -1,85 +1,98 @@
-# Home SOC Lab — Wazuh Detection Validation
+<p align="center"><img src="docs/assets/header.svg" alt="Home SOC Lab — Windows and Linux detection with Wazuh" width="1000"></p>
 
-A hands-on SOC laboratory that centralizes Windows and Ubuntu telemetry, validates detections, and makes the limits of each result explicit.
+# Home SOC Lab · Wazuh
 
-**8 scenarios · 4 custom Wazuh rules · Windows + Linux · restart validation**
+A student-built lab for collecting Windows and Linux logs, investigating alerts, and checking what the evidence actually demonstrates.
 
-The lab was built and tested between September 30 and October 10, 2026. This repository documents that work; its Git history starts with publication.
+**Wazuh · Sysmon · Windows · Ubuntu · Python · VirtualBox**
 
-## What I built
+[Architecture](docs/architecture.md) · [Scenarios](docs/scenarios/README.md) · [Python tools](docs/python-tools.md) · [Results & limits](docs/results-and-limits.md) · [V1 → V2](docs/evolution-v1-v2.md)
 
-- A three-VM VirtualBox lab: a Wazuh server, a Windows endpoint and an Ubuntu endpoint.
-- Windows process telemetry with Sysmon and script content with PowerShell event 4104.
-- Linux file integrity monitoring and SSH authentication monitoring.
-- Four custom discovery rules with targeted MITRE ATT&CK mappings.
-- Evidence-backed comparisons, legitimate-use controls, configuration exports and restart checks.
+> **En bref :** laboratoire SOC étudiant sur trois VM. La V1 établit la collecte et huit scénarios ; la V2 ajoute des essais de corrélation, des preuves structurées, un rejeu SSH et des outils Python. Les tests sont autorisés et les alertes ne sont pas des incidents confirmés.
 
-## Architecture
+## The lab
 
-```mermaid
-flowchart LR
-    H["Host computer<br/>192.168.56.1"]
-    W["Windows-Endpoint<br/>192.168.56.102<br/>Sysmon + PowerShell"]
-    U["Ubuntu-Endpoint<br/>192.168.56.103<br/>FIM + SSH journals"]
-    S["Wazuh Server<br/>192.168.56.101<br/>Manager / Indexer / Dashboard"]
-    W -->|"Wazuh agent · TCP 1514"| S
-    U -->|"Wazuh agent · TCP 1514"| S
-    H -->|"Dashboard / SSH"| S
+![Three-VM architecture and log flow](docs/assets/architecture.svg)
+
+One Wazuh server receives telemetry from a Windows endpoint and an Ubuntu endpoint. A host-only network carries lab traffic; separate NAT adapters provide outbound access. This is not an Internet-exposed SOC.
+
+## What I practised
+
+| Skill | Practical work |
+| --- | --- |
+| Log collection | Sysmon process creation, PowerShell script blocks and Ubuntu SSH journals |
+| Alert investigation | Comparing commands, source events, rule IDs and endpoint identities |
+| Detection rules | Four discovery rules extended with a host-scoped correlation rule |
+| Python | Evidence checks, configuration checks, a local HTML report and an SSH replay runner |
+| Validation | Positive/negative lab cases, unit tests, source provenance and explicit limitations |
+
+## V2: observed results
+
+| Scenario | Observed result | Evidence |
+| --- | --- | --- |
+| Windows discovery | Four closely spaced events triggered custom rule 100110; three and widely spaced events did not in the selected exports | [Four comparison cases](docs/scenarios/discovery-correlation.md) |
+| PowerShell | Benign plain/encoded commands produced native rules 92027/4 and 92057/12 | [Comparison](docs/scenarios/powershell-encoded.md) |
+| Scheduled task | Registration produced native rule 67014/3; local execution succeeded, then the task was removed | [Creation and cleanup](docs/scenarios/scheduled-task.md) |
+| Ubuntu SSH | Eight controlled failed logins produced seven 5760/5 alerts, then 5763/10 | [Correlation and replay](docs/scenarios/ssh-correlation.md) |
+
+The V1 work is still available: [eight original scenarios](docs/scenarios/README.md#v1-foundation), including Ubuntu FIM, a PowerShell registry test and file discovery. This is one evolving project, not two unrelated labs.
+
+## A look at the evidence
+
+**Ubuntu: individual failures followed by a native correlation alert**
+
+![SSH correlation observed in Wazuh](evidence/screenshots/ssh/repeated-failures.png)
+
+**Windows: four recorded discovery comparisons**
+
+![Discovery comparison report, generated from selected exports](evidence/screenshots/report/discovery-summary.png)
+
+The second image is a presentation of the exports, not an independent detection test. [Evidence provenance and screenshot notes](evidence/README.md).
+
+## Run the local checks
+
+Python 3.13; standard library only. From the repository root:
+
+```bash
+python -m unittest discover -v -s tests -p "test_*.py"
+python tools/check_xml.py
+python tools/validate_evidence.py tests/fixtures
+python tools/generate_report.py tests/fixtures report.html
 ```
 
-The VMs share a host-only network for lab traffic and have separate NAT interfaces for outbound access. [Architecture and network evidence](docs/architecture.md).
+Choose a new output filename when regenerating a report. The program refuses to overwrite an existing file. Report content is in French, matching the lab's analyst notes; it decodes Base64 as text and never executes it.
 
-## Results at a glance
+**Local validation:** the original 32 unit tests, four archived-configuration checks and seven evidence checks passed before this preview. The publication layout now passes **33 unit tests**, including a new check that the five-rule extract matches the recorded lab rules. The real SSH engine replay was performed separately on the Wazuh server.
 
-| Scenario | Test method | Final detection | Outcome |
-|---|---|---|---|
-| [T1057 — Process Discovery](docs/scenarios/t1057.md) | Atomic test 2: tasklist | Custom 100100 | Explicit T1057 mapping |
-| [T1082 — System Information Discovery](docs/scenarios/t1082.md) | Atomic test 1: systeminfo | Custom 100101 | Explicit T1082 mapping |
-| [T1016 — Network Configuration Discovery](docs/scenarios/t1016.md) | Atomic test 1, focused on ipconfig /all | Custom 100102 | Executable + argument match |
-| [T1033 — System Owner/User Discovery](docs/scenarios/t1033.md) | Partial Atomic test, then manual whoami | Custom 100103 | Targeted behavior validated |
-| [Ubuntu — File Integrity Monitoring](docs/scenarios/ubuntu-fim.md) | Controlled text-file edit | Native 550 | Before/after content and hashes |
-| [Ubuntu — SSH Authentication](docs/scenarios/ubuntu-ssh.md) | Three wrong passwords, then a valid login | Native 5760 / 5715 | Failure and success distinguished |
-| [PowerShell / Registry Modification](docs/scenarios/powershell-registry.md) | Manual lab registry value | Native 91843 | Script text and action verified |
-| [T1083 — File and Directory Discovery](docs/scenarios/t1083.md) | Manual adaptation of Atomic test 2 | Native 91820 | Recursive enumeration detected |
+**GitHub Actions:** workflow prepared; no successful GitHub run is claimed yet. Local unit tests mock the Wazuh subprocess and cannot replace the recorded real-engine replay.
 
-For the first four scenarios, Wazuh **already generated generic alerts**. The custom rules improved descriptions and behavior-specific MITRE mappings; they did not turn an undetected event into a detected attack.
+## Important boundaries
 
-### Example: a custom discovery rule
+- Rule 100110 uses an empirical frequency=7 / 60-second setting; the counting behaviour remains unexplained. Repeating the same command can trigger it.
+- A successful Windows EventChannel engine replay has not been established.
+- Task creation was detected; detection of task execution in Wazuh is not demonstrated.
+- The SSH replay streams events rapidly: timing-boundary and multi-source-IP tests are not included.
+- Agent buffer saturation was observed. No exhaustive collection, reliable detection latency, overall detection rate or production false-positive rate is claimed.
 
-![T1057 search and rule 100100](docs/screenshots/t1057/after-search.png)
+Read [results and limitations](docs/results-and-limits.md) before interpreting the screenshots.
 
-### Example: native Linux file integrity monitoring
+## Repository guide
 
-![Ubuntu FIM content change](docs/screenshots/ubuntu-fim/content-diff.png)
+| Directory | Contents |
+| --- | --- |
+| `docs/` | Architecture, scenarios, procedures, evolution and limitations |
+| `configs/` | Custom rules, archived lab settings and separately attributed third-party references |
+| `tools/` | Four small Python programs |
+| `tests/` | Unit tests and a selected reference corpus |
+| `evidence/` | Curated screenshots and recorded SSH replay outputs |
+| `.github/workflows/` | Offline checks; no VM credentials or live lab access |
 
-## Explore the project
+## Project history and attribution
 
-- [Setup and configuration](docs/installation.md)
-- [Detailed results and measurement criteria](docs/results.md)
-- [Custom rules and their limitations](rules/wazuh/README.md)
-- [Restart checks and backups](docs/validation.md)
-- [Limitations and next improvements](docs/limitations.md)
-- [Evidence index](docs/evidence.md)
-- [Five-minute demonstration](docs/demo.md)
+V1 was published first; V2 builds on its collection and detection work. [The preserved V1 commit](https://github.com/AyoubMRN/home-soc-lab-wazuh/tree/f13f2e7570baa49a2699d6f3975b3c6383155d6e) remains accessible in Git history. No historical commits have been rewritten.
 
-## What these results do — and do not — prove
+Lab manipulations and verification were performed by **Ayoub**. Python tools and documentation were developed with AI assistance; understanding and explaining their limits is part of the learning objective. There is no AI service integrated into the SOC.
 
-The eight scenarios produced the expected targeted results in this lab. They do not establish complete coverage of eight ATT&CK techniques or a production detection rate.
+Native Wazuh rules and Olaf Hartong's Sysmon-modular configuration are third-party work, not original detections authored for this project. [Sources, notices and licensing decisions](docs/sources-and-attributions.md).
 
-Legitimate administration can trigger the discovery rules. T1033's original Atomic test failed partly because WMIC was unavailable; the subsequent whoami validation was manual. T1083 was also a scoped manual adaptation. An ATT&CK label on an alert is not proof of malicious intent.
-
-## Reproduce a scenario
-
-Start with the [setup guide](docs/installation.md), check both agents are active, then follow a scenario page. Each page states the executed command, observed telemetry, rule, expected query and practical limits.
-
-The XML files in [configs](configs/README.md) are examples and reviewed lab exports. VM disks, snapshots, enrollment secrets and private keys are not included. The original Sysmon configuration is not available in this repository, so a fresh build must choose and validate its own process-creation configuration.
-
-## Résumé en français
-
-Laboratoire SOC personnel avec Wazuh, Windows et Ubuntu : huit scénarios testés, quatre règles personnalisées, collecte Sysmon/PowerShell, surveillance FIM et SSH. Les résultats sont documentés avec leurs limites et des vérifications après redémarrage.
-
-## Tools and references
-
-[Wazuh](https://documentation.wazuh.com/current/) · [Sysmon](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon) · [Atomic Red Team](https://github.com/redcanaryco/atomic-red-team) · [Invoke-AtomicRedTeam](https://github.com/redcanaryco/invoke-atomicredteam) · [MITRE ATT&CK](https://attack.mitre.org/)
-
-Screenshots retain the original French interface. No overall before/after detection percentage is claimed.
+Video demonstration and AI integration are deferred. Private archives, enrollment secrets and unreviewed bulk logs are not publication material.

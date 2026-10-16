@@ -1,5 +1,18 @@
 # Scenario index
 
+## V2 additions
+
+| Scenario | Focus |
+| --- | --- |
+| [Discovery correlation](discovery-correlation.md) | Three/four events, close/spaced and mixed-program comparisons |
+| [Plain/encoded PowerShell](powershell-encoded.md) | Native alerts and archived source pairing |
+| [Scheduled task](scheduled-task.md) | Registration, local run and cleanup |
+| [Ubuntu SSH correlation](ssh-correlation.md) | Eight failures and real-engine replay |
+
+## V1 foundation
+
+The eight scenarios below are preserved historical observations. The current custom rule set extends the four V1 discovery rules; do not install both versions together. See [V1 to V2](../evolution-v1-v2.md).
+
 | Scenario | Method |
 |---|---|
 | [T1057](t1057.md) | Atomic test 2 |

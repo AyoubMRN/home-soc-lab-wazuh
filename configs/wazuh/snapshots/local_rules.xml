@@ -1,0 +1,74 @@
+<!-- Local rules -->
+
+<!-- Modify it at your will. -->
+<!-- Copyright (C) 2015, Wazuh Inc. -->
+
+<!-- Example -->
+<group name="local,syslog,sshd,">
+
+  <!--
+  Dec 10 01:02:02 host sshd[1234]: Failed none for root from 1.1.1.1 port 1066 ssh2
+  -->
+  <rule id="100001" level="5">
+    <if_sid>5716</if_sid>
+    <srcip>1.1.1.1</srcip>
+    <description>sshd: authentication failed from IP 1.1.1.1.</description>
+    <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,</group>
+  </rule>
+
+</group>
+
+
+<group name="windows,sysmon,process_discovery,soc_discovery,">
+  <rule id="100100" level="7">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\tasklist\.exe$</field>
+    <description>Process discovery using tasklist.exe on $(win.system.computer)</description>
+    <mitre>
+      <id>T1057</id>
+    </mitre>
+  </rule>
+</group>
+
+
+<group name="windows,sysmon,system_information_discovery,soc_discovery,">
+  <rule id="100101" level="7">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\systeminfo\.exe$</field>
+    <description>System information discovery using systeminfo.exe on $(win.system.computer)</description>
+    <mitre>
+      <id>T1082</id>
+    </mitre>
+  </rule>
+</group>
+
+<group name="windows,sysmon,network_configuration_discovery,soc_discovery,">
+  <rule id="100102" level="5">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\ipconfig\.exe$</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(?:^|\s)/all(?:\s|$)</field>
+    <description>Network configuration discovery using ipconfig /all on $(win.system.computer)</description>
+    <mitre>
+      <id>T1016</id>
+    </mitre>
+  </rule>
+</group>
+
+<group name="windows,sysmon,user_discovery,soc_discovery,">
+  <rule id="100103" level="5">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\whoami\.exe$</field>
+    <description>User discovery using whoami.exe on $(win.system.computer)</description>
+    <mitre>
+      <id>T1033</id>
+    </mitre>
+  </rule>
+</group>
+
+<group name="windows,sysmon,soc_correlation,">
+  <rule id="100110" level="8" frequency="7" timeframe="60">
+    <if_matched_group>soc_discovery</if_matched_group>
+    <same_field>win.system.computer</same_field>
+    <description>Repeated discovery activity within 60 seconds on $(win.system.computer) - review required</description>
+  </rule>
+</group>

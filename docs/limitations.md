@@ -1,5 +1,7 @@
 # Limitations and next improvements
 
+> Historical V1 limitations and roadmap. V2 has since recovered the Sysmon XML, tested correlations and exported selected sources. See [current limitations](results-and-limits.md); the statements below describe the V1 publication state.
+
 This version validates eight targeted lab scenarios, not complete ATT&CK coverage.
 
 - The custom discovery rules match executable names and, for ipconfig, one argument. They can alert on legitimate administration and do not correlate sequences or inspect intent.

@@ -1,6 +1,6 @@
 # Setup and reproduction
 
-This guide captures the configuration used for the tested behaviors. It is not a complete unattended VM provisioning script. The original Sysmon XML and an exact Atomic repository commit were not preserved.
+This guide retains the V1 setup and identifies V2 changes. It is not a complete unattended provisioning script. The Sysmon XML was recovered during V2 and is archived with attribution; its exact upstream commit and a new installation remain unverified. The original Atomic commit was not preserved.
 
 ## 1. Prepare the VMs
 
@@ -14,7 +14,7 @@ The lab's manager had about 4 GiB RAM and no swap. Dashboard availability proble
 
 ## 2. Windows process telemetry
 
-Install Sysmon from [Microsoft Sysinternals](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon), using a configuration that records process creation event 1. The original lab configuration is not shipped here. Confirm event 1 exists locally:
+Install Sysmon from [Microsoft Sysinternals](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon), using a configuration that records process creation event 1. The recovered [lab reference](../configs/sysmon/SOURCE.md) is included, but a fresh deployment of it has not been tested. Confirm event 1 exists locally:
 
 ```powershell
 Get-Service Sysmon64
@@ -74,7 +74,7 @@ sudo journalctl -u ssh -n 10 --no-pager
 
 ## 6. Add the custom rules
 
-Back up local_rules.xml on the manager. After checking IDs 100100–100103 are not already allocated, copy [the custom rules](../rules/wazuh/soc-discovery-rules.xml) into /var/ossec/etc/rules/ as a uniquely named XML file. Do not also append the same rules to local_rules.xml.
+Back up the manager's rules. V2's [five-rule extract](../configs/wazuh/custom/README.md) includes IDs 100100–100103 and 100110. Check all IDs for collisions. If V1 rules already exist, plan a replacement of those definitions, not an additional installation. Never load the extract alongside the archived full local_rules.xml. Copying it as a standalone file is a proposed method, not a deployment already verified in this lab.
 
 ```bash
 sudo /var/ossec/bin/wazuh-analysisd -t
@@ -94,7 +94,7 @@ This view searches alerts. No visible alert does not establish that a raw event 
 
 ## 8. Preserve a reproducible rebuild
 
-The historical Sysmon XML and Atomic source revision remain unavailable. The following is a checklist for a **new rebuild**, not evidence that the original environment has been reconstructed or that new tests have passed.
+The Sysmon XML has since been recovered, but its exact source revision and the Atomic revision remain unverified. The following is a checklist for a **new rebuild**, not evidence that the original environment has been reconstructed or that new tests have passed.
 
 Before running a new campaign:
 

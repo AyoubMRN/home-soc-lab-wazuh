@@ -1,5 +1,7 @@
 # Restart validation and backups
 
+> V1 validation record. Additional V2 checks are documented in [Python tools](python-tools.md) and [V2 results](results-and-limits.md).
+
 The manager syntax check completed without an error, and the Indexer, Manager and Dashboard reported active.
 
 ![Manager syntax check and services](screenshots/validation/manager-services.png)

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="220" viewBox="0 0 1000 220" role="img" aria-labelledby="title desc">
+<title id="title">Home SOC Lab</title><desc id="desc">A student project: Windows and Linux detection with Wazuh. Collect, investigate, validate.</desc>
+<rect width="1000" height="220" rx="16" fill="#101f33"/><path d="M700 0h300v220H820z" fill="#152d46"/><path d="M820 0h180v220h-60z" fill="#193b50"/>
+<rect x="38" y="39" width="5" height="140" rx="2" fill="#49d7c0"/>
+<g font-family="Arial, Helvetica, sans-serif"><text x="65" y="60" fill="#8fd6cf" font-size="14" letter-spacing="3">STUDENT CYBERSECURITY PROJECT</text>
+<text x="62" y="115" fill="#ffffff" font-size="46" font-weight="700">HOME SOC LAB</text>
+<text x="65" y="150" fill="#d3dfeb" font-size="20">Windows &amp; Linux detection with Wazuh</text>
+<text x="65" y="184" fill="#9cb0c8" font-size="15">COLLECT  /  INVESTIGATE  /  VALIDATE</text>
+<rect x="817" y="77" width="115" height="64" rx="10" fill="#101f33" stroke="#49d7c0"/><text x="846" y="116" font-size="25" font-weight="700" fill="#49d7c0">V2</text></g></svg>
