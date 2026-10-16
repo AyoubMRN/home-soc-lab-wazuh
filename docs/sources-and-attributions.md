@@ -17,10 +17,10 @@
 | Agent configuration snapshots | Lab settings based on Wazuh-provided configuration; original notices retained |
 | Five-rule custom extract | Lab discovery work plus correlation; omits the Wazuh sample rule 100001 |
 | Full local_rules.xml snapshot | Historical lab export, including the vendor example; never call every rule in it original work |
-| Python tools, documentation and diagrams | Prepared for the student lab with AI assistance |
+| Python tools and documentation | Local validation utilities and documentation for this student lab |
 | Screenshots and records | Authorised lab observations, not production incident data |
 
-Lab manipulations and verification were performed by Ayoub. AI assisted coding, explanation, organisation and documentation. No AI service is integrated into detection or response.
+Lab manipulations and verification were performed by Ayoub. Third-party configurations and native rules retain their source notices and are distinguished from the lab's custom rules.
 
 ## Licence scope
 

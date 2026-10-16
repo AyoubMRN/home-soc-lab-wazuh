@@ -1,5 +1,3 @@
-<p align="center"><img src="docs/assets/header.svg" alt="Home SOC Lab — Windows and Linux detection with Wazuh" width="1000"></p>
-
 # Home SOC Lab · Wazuh
 
 A student-built lab for collecting Windows and Linux logs, investigating alerts, and checking what the evidence actually demonstrates.
@@ -97,12 +95,8 @@ Read [results and limitations](docs/results-and-limits.md) before interpreting t
 | `evidence/` | Curated screenshots and recorded SSH replay outputs |
 | `.github/workflows/` | Offline checks; no VM credentials or live lab access |
 
-## Project history and attribution
+## Project evolution
 
-V1 was published first; V2 builds on its collection and detection work. [The preserved V1 commit](https://github.com/AyoubMRN/home-soc-lab-wazuh/tree/f13f2e7570baa49a2699d6f3975b3c6383155d6e) remains accessible in Git history. No historical commits have been rewritten.
+V2 extends the original Windows and Ubuntu lab with correlation tests, evidence validation and a local Python report. [The V1 snapshot](https://github.com/AyoubMRN/home-soc-lab-wazuh/tree/f13f2e7570baa49a2699d6f3975b3c6383155d6e) remains available in the repository history.
 
-Lab manipulations and verification were performed by **Ayoub**. Python tools and documentation were developed with AI assistance; understanding and explaining their limits is part of the learning objective. There is no AI service integrated into the SOC.
-
-Native Wazuh rules and Olaf Hartong's Sysmon-modular configuration are third-party work, not original detections authored for this project. [Sources, notices and licensing decisions](docs/sources-and-attributions.md).
-
-Video demonstration and AI integration are deferred. Private archives, enrollment secrets and unreviewed bulk logs are not publication material.
+See [sources and third-party credits](docs/sources-and-attributions.md) for the Wazuh rules and Sysmon configuration used in the lab.
