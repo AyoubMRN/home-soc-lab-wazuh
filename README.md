@@ -12,7 +12,17 @@ A student-built lab for collecting Windows and Linux logs, investigating alerts,
 
 ## The lab
 
-![Three-VM architecture and log flow](docs/assets/architecture.svg)
+```mermaid
+flowchart LR
+    W["Windows-Endpoint<br/>192.168.56.102<br/>Sysmon · PowerShell · TaskScheduler<br/>Wazuh agent 002"]
+    U["Ubuntu-Endpoint<br/>192.168.56.103<br/>SSH journals · File integrity monitoring<br/>Wazuh agent 001"]
+    S["Wazuh server<br/>192.168.56.101<br/>Manager · Indexer · Dashboard"]
+    H["Host computer<br/>192.168.56.1"]
+
+    W -->|"Agent logs · TCP 1514"| S
+    U -->|"Agent logs · TCP 1514"| S
+    H -->|"Dashboard / SSH"| S
+```
 
 One Wazuh server receives telemetry from a Windows endpoint and an Ubuntu endpoint. A host-only network carries lab traffic; separate NAT adapters provide outbound access. This is not an Internet-exposed SOC.
 

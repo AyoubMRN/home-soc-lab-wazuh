@@ -1,5 +1,17 @@
 # Architecture
 
+```mermaid
+flowchart LR
+    W["Windows-Endpoint<br/>192.168.56.102<br/>Sysmon · PowerShell · TaskScheduler<br/>Wazuh agent 002"]
+    U["Ubuntu-Endpoint<br/>192.168.56.103<br/>SSH journals · File integrity monitoring<br/>Wazuh agent 001"]
+    S["Wazuh server<br/>192.168.56.101<br/>Manager · Indexer · Dashboard"]
+    H["Host computer<br/>192.168.56.1"]
+
+    W -->|"Agent logs · TCP 1514"| S
+    U -->|"Agent logs · TCP 1514"| S
+    H -->|"Dashboard / SSH"| S
+```
+
 ## Machines and traffic
 
 | Component | Lab IP | Role |
