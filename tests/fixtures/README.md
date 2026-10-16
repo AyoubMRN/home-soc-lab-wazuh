@@ -17,4 +17,4 @@ These reference records support local validation and report generation, not an e
 
 Windows tests: 15 October 2026, agent 002. SSH test: 16 October 2026, agent 001. These fixtures deliberately retain generic lab accounts, machine names, private host-only addresses, timestamps and event IDs needed to verify the evidence. They must not be interpreted as a live environment or real compromise.
 
-No personal host username or school-specific path was found in the selected corpus during the targeted review. That is not an absolute secret-scanning guarantee. Original files remain in private archives; this preview has not been uploaded.
+No personal host username or school-specific path was found in the selected corpus during the targeted review. That is not an absolute secret-scanning guarantee. The selected corpus is published here; original private archives are not included.

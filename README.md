@@ -40,7 +40,7 @@ One Wazuh server receives telemetry from a Windows endpoint and an Ubuntu endpoi
 | --- | --- | --- |
 | Windows discovery | Four closely spaced events triggered custom rule 100110; three and widely spaced events did not in the selected exports | [Four comparison cases](docs/scenarios/discovery-correlation.md) |
 | PowerShell | Benign plain/encoded commands produced native rules 92027/4 and 92057/12 | [Comparison](docs/scenarios/powershell-encoded.md) |
-| Scheduled task | Registration produced native rule 67014/3; local execution succeeded, then the task was removed | [Creation and cleanup](docs/scenarios/scheduled-task.md) |
+| Scheduled task | Registration produced native rule 67014/3; local task result: LastTaskResult = 0; cleanup confirmed | [Creation and cleanup](docs/scenarios/scheduled-task.md) |
 | Ubuntu SSH | Eight controlled failed logins produced seven 5760/5 alerts, then 5763/10 | [Correlation and replay](docs/scenarios/ssh-correlation.md) |
 
 The V1 work is still available: [eight original scenarios](docs/scenarios/README.md#v1-foundation), including Ubuntu FIM, a PowerShell registry test and file discovery. This is one evolving project, not two unrelated labs.
@@ -70,9 +70,9 @@ python tools/generate_report.py tests/fixtures report.html
 
 Choose a new output filename when regenerating a report. The program refuses to overwrite an existing file. Report content is in French, matching the lab's analyst notes; it decodes Base64 as text and never executes it.
 
-**Local validation:** the original 32 unit tests, four archived-configuration checks and seven evidence checks passed before this preview. The publication layout now passes **33 unit tests**, including a new check that the five-rule extract matches the recorded lab rules. The real SSH engine replay was performed separately on the Wazuh server.
+**Local validation:** **39 unit tests**, four archived-configuration checks and seven evidence checks pass. Tests include rejection of mixed-computer discovery cases and mismatched task source fields. The real SSH engine replay was performed separately on the Wazuh server.
 
-**GitHub Actions:** workflow prepared; no successful GitHub run is claimed yet. Local unit tests mock the Wazuh subprocess and cannot replace the recorded real-engine replay.
+**GitHub Actions:** [a successful published run](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions/runs/38967682383) checked the earlier 33-test revision, archived configurations, evidence and report generation. See [Actions](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions) for later revisions. Unit tests mock the Wazuh subprocess and cannot replace the recorded real-engine replay.
 
 ## Important boundaries
 

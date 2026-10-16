@@ -1,6 +1,6 @@
 """Generate a local HTML report for recorded PowerShell and correlation tests.
 
-No network calls, AI, incident verdicts or Wazuh engine replay.
+No network calls, AI service calls, incident verdicts or Wazuh engine replay.
 """
 import argparse
 import base64
@@ -141,7 +141,7 @@ def render_ssh(rows):
 <dt>Adresse source / compte ciblé</dt><dd>{text(final['data']['srcip'])} / {text(final['data']['dstuser'])}</dd>
 <dt>Résultat observé</dt><dd>Sept alertes individuelles 5760 (niveau 5), puis une corrélation native 5763 (niveau 10).</dd>
 <dt>Description native</dt><dd>{text(final['rule']['description'])}</dd>
-<dt>Seuil de l’alerte</dt><dd>{text(final['rule']['frequency'])} événements. Fenêtre de 120 secondes et ignore de 60 secondes relevés manuellement dans la règle installée ; son fichier XML reste à exporter.</dd>
+<dt>Seuil de l’alerte</dt><dd>{text(final['rule']['frequency'])} événements. Fenêtre de 120 secondes et ignore de 60 secondes relevés dans la règle installée ; une copie de son XML est conservée dans configs/wazuh-native/0095-sshd_rules.xml. Le générateur ne relit pas ce XML pour confirmer ces paramètres.</dd>
 <dt>MITRE ATT&amp;CK</dt><dd>{text(', '.join(final['rule'].get('mitre', {}).get('id', [])))}</dd></dl>
 <div class="table-wrap"><table><thead><tr><th>Heure d’alerte UTC</th><th>Écart au début</th><th>Port source</th><th>Règle</th><th>Niveau</th></tr></thead><tbody>{''.join(timeline)}</tbody></table></div>
 <h3>Événement source déclencheur</h3><pre>{text(final['full_log'])}</pre>
@@ -194,7 +194,7 @@ footer{font-size:14px;color:#526678}li{margin-bottom:9px}@media print{body{backg
 <section><h2>Portée et limites</h2><p>Dans ce test, PowerShell lance une autre instance PowerShell. La règle 92057 décrit ce contexte avec une commande Base64. Le résultat ne démontre pas la détection de toutes les formes de PowerShell encodé.</p>
 <p>Les exports d’alertes n’ont pas de full_log ; les sources correspondantes sont conservées séparément dans powershell-comparison.archives.jsonl. Un validateur distinct contrôle leur cohérence. Ce rapport n’effectue ni validation par le moteur Wazuh, ni mesure de couverture, ni décision de réponse automatique.</p>
 <p>Les heures affichées sont en UTC. Les commandes sont affichées telles que stockées, avec leurs caractères d’échappement éventuels. Des saturations du tampon de l’agent ont été observées pendant le laboratoire ; l’exhaustivité de la collecte n’est pas garantie.</p></section>
-<footer>Généré localement par Python à partir d’exports JSONL sélectionnés. Aucune requête réseau ni service d’IA utilisé.</footer>
+<footer>Généré localement par Python à partir d’exports JSONL sélectionnés. Aucune requête réseau ni appel à un service d’IA lors de la génération du rapport.</footer>
 </main></body></html>'''
 
 

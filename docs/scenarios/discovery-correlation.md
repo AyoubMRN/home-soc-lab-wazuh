@@ -6,6 +6,8 @@ Compare repeated benign discovery events on Windows-Endpoint, agent 002. Existin
 
 The shared group is an input to counting; the output group is soc_correlation. The rule does not require different programs or establish malicious intent.
 
+The Wazuh agent is named `Windows-Endpoint`, while the Windows source field `win.system.computer` is `Windows-Endpoin`. These are different fields, preserved as recorded rather than normalised. Correlation uses the latter; the evidence validator requires one non-empty computer value across each case and matches each decoded event to its source.
+
 ## Four recorded cases
 
 | Case | Preserved events | Observation |

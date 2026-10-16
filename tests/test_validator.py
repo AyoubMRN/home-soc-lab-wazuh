@@ -2,10 +2,52 @@ import json
 from pathlib import Path
 import unittest
 from unittest.mock import patch
-from tools.validate_evidence import load, check_source, ssh
+from tools.validate_evidence import load, check_source, correlation, task, ssh
 
 
 class InvalidEvidenceTests(unittest.TestCase):
+    fixtures = Path(__file__).parent / "fixtures"
+
+    def test_correlation_single_computer_passes(self):
+        correlation(self.fixtures, "correlation-whoami-three.alerts.jsonl", None, {"100103": 3})
+
+    def test_correlation_mixed_computers_are_rejected(self):
+        rows = load(self.fixtures / "correlation-whoami-three.alerts.jsonl")
+        rows[1]["data"]["win"]["system"]["computer"] = "Other-Endpoint"
+        raw = json.loads(rows[1]["full_log"])
+        raw["win"]["system"]["computer"] = "Other-Endpoint"
+        rows[1]["full_log"] = json.dumps(raw)
+        with patch("tools.validate_evidence.load", return_value=rows):
+            with self.assertRaisesRegex(ValueError, "single non-empty computer"):
+                correlation(Path("unused"), "case.jsonl", None, {"100103": 3})
+
+    def test_correlation_empty_computer_is_rejected(self):
+        rows = load(self.fixtures / "correlation-whoami-three.alerts.jsonl")
+        for row in rows:
+            row["data"]["win"]["system"]["computer"] = ""
+            raw = json.loads(row["full_log"])
+            raw["win"]["system"]["computer"] = ""
+            row["full_log"] = json.dumps(raw)
+        with patch("tools.validate_evidence.load", return_value=rows):
+            with self.assertRaisesRegex(ValueError, "single non-empty computer"):
+                correlation(Path("unused"), "case.jsonl", None, {"100103": 3})
+
+    def test_task_provider_mismatch_is_rejected(self):
+        self.assert_task_field_rejected("providerName", "Other-Provider", "provider mismatch")
+
+    def test_task_source_time_mismatch_is_rejected(self):
+        self.assert_task_field_rejected("systemTime", "2026-10-15T16:18:03.0773493Z", "source time mismatch")
+
+    def test_task_channel_mismatch_is_rejected(self):
+        self.assert_task_field_rejected("channel", "Other-Channel", "channel mismatch")
+
+    def assert_task_field_rejected(self, field, value, message):
+        rows = load(self.fixtures / "scheduled-task-created.alerts.jsonl")
+        rows[0]["data"]["win"]["system"][field] = value
+        with patch("tools.validate_evidence.load", return_value=rows):
+            with self.assertRaisesRegex(ValueError, message):
+                task(self.fixtures)
+
     def ssh_fixture(self):
         rows = []
         for index in range(8):

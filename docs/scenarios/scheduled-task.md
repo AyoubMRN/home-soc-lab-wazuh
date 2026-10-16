@@ -18,7 +18,7 @@ Create a harmless manual-only task named SOC-Lab-V2-Test, launch it once, inspec
 ![Local run result](../../evidence/screenshots/scheduled-task/local-run-result.png)
 ![Cleanup](../../evidence/screenshots/scheduled-task/cleanup.png)
 
-The validator compares the alert identity, task and computer with scheduled-task-created.event106.xml. The [provenance note](../../tests/fixtures/scheduled-task-created.provenance.md) states how that XML was preserved.
+The validator compares the alert identity, task, computer, provider, source timestamp and channel with scheduled-task-created.event106.xml. It compares the event's systemTime, not the later Wazuh alert timestamp. The [provenance note](../../tests/fixtures/scheduled-task-created.provenance.md) states how that XML was preserved.
 
 ## Interpretation and limits
 

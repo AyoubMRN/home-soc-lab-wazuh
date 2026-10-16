@@ -40,6 +40,9 @@ def check_source(row):
 def correlation(folder, name, records, counts, spaced=False, mixed=False):
     rows = load(folder / name)
     require(Counter(r["rule"]["id"] for r in rows) == Counter(counts), "unexpected rule counts")
+    computers = [event(r)["system"]["computer"] for r in rows]
+    require(all(isinstance(c, str) and c.strip() for c in computers)
+            and len(set(computers)) == 1, "expected a single non-empty computer per correlation case")
     ids = [event(r)["system"]["eventRecordID"] for r in rows]
     require(len(ids) == len(set(ids)), "duplicate Windows event identifiers")
     if records:
@@ -89,6 +92,12 @@ def task(folder):
         require(root.findtext("e:System/e:" + key, namespaces=ns) == expected, "unexpected XML " + key)
     require(str(win["system"]["eventID"]) == "106" and str(win["system"]["eventRecordID"]) == "15", "task identity mismatch")
     require(root.findtext("e:System/e:Computer", namespaces=ns) == win["system"]["computer"], "computer mismatch")
+    provider = root.find("e:System/e:Provider", ns)
+    require(provider is not None and provider.get("Name") == win["system"]["providerName"], "provider mismatch")
+    created = root.find("e:System/e:TimeCreated", ns)
+    # Keep all seven source fractional digits; Python datetime keeps only six.
+    require(created is not None and created.get("SystemTime") == win["system"]["systemTime"], "source time mismatch")
+    require(root.findtext("e:System/e:Channel", namespaces=ns) == win["system"]["channel"], "channel mismatch")
     name = root.find("e:EventData/e:Data[@Name='TaskName']", ns).text
     require(name == "\\SOC-Lab-V2-Test", "unexpected task name")
     require(win["eventdata"]["taskName"].replace("\\\\", "\\") == name, "task name mismatch")

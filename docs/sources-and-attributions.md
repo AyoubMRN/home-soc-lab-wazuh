@@ -24,6 +24,6 @@ Lab manipulations and verification were performed by Ayoub. Third-party configur
 
 ## Licence scope
 
-Third-party notices are retained with the corresponding files. Upstream Wazuh and Sysmon-modular licence texts do not automatically license all independent code, documentation or images in this repository. No project-wide licence has been chosen by the author during this preview; do not add a misleading MIT or GPL badge. The licence for original material is a decision to confirm before publication.
+Third-party notices are retained with the corresponding files. Upstream Wazuh and Sysmon-modular licence texts do not automatically license all independent code, documentation or images in this repository. No project-wide licence has been chosen by the author. Reuse rights for original material remain to be clarified; the upstream licences retain their separate scope.
 
 Upstream licences consulted for this preparation: [Wazuh v4.14.8 LICENSE](https://github.com/wazuh/wazuh/blob/v4.14.8/LICENSE) and [Sysmon-modular license.md](https://github.com/olafhartong/sysmon-modular/blob/master/license.md). Their contents have been preserved locally with the references; an exact Sysmon source revision remains unknown.

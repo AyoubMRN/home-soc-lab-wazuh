@@ -1,5 +1,26 @@
 # Five-minute demonstration
 
+## V2 evidence walkthrough (offline)
+
+This walkthrough uses preserved evidence. It generates no new endpoint activity and does not demonstrate live collection.
+
+1. **45 seconds:** show the README architecture and identify the manager and two endpoints.
+2. **90 seconds:** open [SSH correlation](scenarios/ssh-correlation.md), compare the seven 5760 alerts with the final 5763, then distinguish source and alert times.
+3. **90 seconds:** from the repository root, run the checks below and open the generated report. Use an unused report filename; the generator refuses to overwrite a file.
+
+```bash
+python -m unittest discover -v -s tests -p "test_*.py"
+python tools/check_xml.py
+python tools/validate_evidence.py tests/fixtures
+python tools/generate_report.py tests/fixtures report-demo.html
+```
+
+4. **75 seconds:** show the [preserved real-engine replay](../evidence/replay-ssh/README.md). Explain that local tests mock Wazuh, while that replay ran on the manager without reproducing original timing. Neither proves current VM health.
+
+## Original V1 live demonstration
+
+The following sequence concerns the original V1 campaign. Its four-rule count is historical; V2 has five custom rules in total. A new live test needs its own evidence and time filters.
+
 ## Preparation
 
 Start Wazuh, wait for services, then start the endpoints. Confirm both agents are active. Open the Dashboard and endpoint consoles. Remove unrelated filters and use a time range around each new test.
