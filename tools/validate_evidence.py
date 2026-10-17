@@ -35,6 +35,7 @@ def check_source(row):
     raw = json.loads(row["full_log"])["win"]
     for key in ("providerName", "eventID", "eventRecordID", "computer"):
         require(raw["system"][key] == event(row)["system"][key], "source identity mismatch: " + key)
+    require(raw["eventdata"] == event(row)["eventdata"], "source process data mismatch")
 
 
 def correlation(folder, name, records, counts, spaced=False, mixed=False):
@@ -47,10 +48,15 @@ def correlation(folder, name, records, counts, spaced=False, mixed=False):
     require(len(ids) == len(set(ids)), "duplicate Windows event identifiers")
     if records:
         require(set(ids) == set(records), "unexpected Windows event identifiers")
-    times = sorted(datetime.fromisoformat(r["timestamp"]) for r in rows)
+    chronological = sorted(rows, key=lambda row: datetime.fromisoformat(row["timestamp"]))
+    times = [datetime.fromisoformat(r["timestamp"]) for r in chronological]
     gaps = [(b-a).total_seconds() for a, b in zip(times, times[1:])]
     require(all(g > 60 for g in gaps) if spaced else (times[-1]-times[0]).total_seconds() < 60,
             "unexpected observed alert timing")
+    if counts.get("100110", 0):
+        require(len(times) > 1 and chronological[-1]["rule"]["id"] == "100110"
+                and times[-1] > times[-2],
+                "correlation must be the last observed alert, with a distinct later timestamp")
     for row in rows:
         check_source(row)
         require(event(row)["system"]["providerName"] == "Microsoft-Windows-Sysmon", "unexpected provider")
@@ -121,7 +127,7 @@ def ssh(folder):
         source_times.append(datetime.strptime("2026 " + match.group(1), "%Y %b %d %H:%M:%S"))
         raw_logs.append(raw)
     require(len(set(raw_logs)) == 8, "duplicate SSH source events")
-    require(0 <= (source_times[-1] - source_times[0]).total_seconds() < 120, "unexpected source time window")
+    require((max(source_times) - min(source_times)).total_seconds() < 120, "unexpected source time window")
     final = rows[-1]
     require(int(final["rule"]["frequency"]) == 8 and final["rule"]["level"] == 10, "unexpected SSH threshold or level")
     previous = final["previous_output"].splitlines()

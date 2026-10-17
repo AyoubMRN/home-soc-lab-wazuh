@@ -23,6 +23,39 @@ Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-Sysmon/Operational'; 
 
 Merge [the event-channel snippet](../configs/windows/event-channels.xml) inside C:\Program Files (x86)\ossec-agent\ossec.conf. Do not duplicate an already configured channel.
 
+### V2 addition: TaskScheduler collection
+
+The snippet above is the V1 baseline. For the V2 scheduled-task scenario, enable the Operational log on Windows-Endpoint from an administrator PowerShell session:
+
+```powershell
+wevtutil sl Microsoft-Windows-TaskScheduler/Operational /e:true
+wevtutil gl Microsoft-Windows-TaskScheduler/Operational
+```
+
+Confirm that the log is enabled. Back up the agent configuration, then merge this block inside its existing `ossec_config` element if the channel is not already present:
+
+```xml
+<localfile>
+  <location>Microsoft-Windows-TaskScheduler/Operational</location>
+  <log_format>eventchannel</log_format>
+</localfile>
+```
+
+This matches the channel in the [archived V2 agent configuration](../configs/wazuh/windows-agent.conf). Save the configuration and restart the agent:
+
+```powershell
+Restart-Service WazuhSvc
+Get-Service WazuhSvc
+```
+
+After an authorised task-registration test, inspect its local event 106 and correlate its task name and time with the Wazuh alert:
+
+```powershell
+Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-TaskScheduler/Operational'; Id=106} -MaxEvents 5
+```
+
+A running service alone does not establish successful collection. Preserve new test results separately from the historical fixtures. References: [Microsoft wevtutil](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wevtutil) and [Wazuh log collection](https://documentation.wazuh.com/current/user-manual/capabilities/log-data-collection/configuration.html).
+
 ## 3. PowerShell Script Block Logging
 
 In Windows PowerShell 5.1 as administrator:

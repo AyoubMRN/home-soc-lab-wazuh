@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 from pathlib import Path
 import unittest
 from unittest.mock import patch
@@ -7,6 +8,70 @@ from tools.validate_evidence import load, check_source, correlation, task, ssh
 
 class InvalidEvidenceTests(unittest.TestCase):
     fixtures = Path(__file__).parent / "fixtures"
+
+    def test_correlation_swapped_process_data_is_rejected(self):
+        rows = load(self.fixtures / "correlation-mixed-four.alerts.jsonl")
+        left, right = (row["data"]["win"] for row in rows[:2])
+        left["eventdata"], right["eventdata"] = right["eventdata"], left["eventdata"]
+        with patch("tools.validate_evidence.load", return_value=rows):
+            with self.assertRaisesRegex(ValueError, "source process data mismatch"):
+                correlation(Path("unused"), "case.jsonl", None,
+                            {"100100": 1, "100102": 1, "100103": 1, "100110": 1}, mixed=True)
+
+    def test_source_command_mismatch_is_rejected(self):
+        for filename in ("correlation-whoami-three.alerts.jsonl", "powershell-comparison.archives.jsonl"):
+            with self.subTest(filename=filename):
+                row = load(self.fixtures / filename)[0]
+                row["data"]["win"]["eventdata"]["commandLine"] = "different command"
+                with self.assertRaisesRegex(ValueError, "source process data mismatch"):
+                    check_source(row)
+
+    def test_correlation_early_alert_is_rejected(self):
+        for filename, counts, mixed in (
+            ("correlation-whoami-four.alerts.jsonl", {"100103": 3, "100110": 1}, False),
+            ("correlation-mixed-four.alerts.jsonl", {"100100": 1, "100102": 1, "100103": 1, "100110": 1}, True),
+        ):
+            with self.subTest(filename=filename):
+                rows = sorted(load(self.fixtures / filename), key=lambda row: row["timestamp"])
+                rows[0]["rule"], rows[-1]["rule"] = rows[-1]["rule"], rows[0]["rule"]
+                with patch("tools.validate_evidence.load", return_value=rows):
+                    with self.assertRaisesRegex(ValueError, "correlation must be the last"):
+                        correlation(Path("unused"), "case.jsonl", None, counts, mixed=mixed)
+
+    def test_correlation_reversed_file_order_passes_without_mutation(self):
+        rows = list(reversed(load(self.fixtures / "correlation-whoami-four.alerts.jsonl")))
+        before = deepcopy(rows)
+        with patch("tools.validate_evidence.load", return_value=rows):
+            correlation(Path("unused"), "case.jsonl", None, {"100103": 3, "100110": 1})
+        self.assertEqual(rows, before)
+
+    def test_correlation_tied_final_alert_is_rejected(self):
+        rows = sorted(load(self.fixtures / "correlation-whoami-four.alerts.jsonl"), key=lambda row: row["timestamp"])
+        rows[-1]["timestamp"] = rows[-2]["timestamp"]
+        with patch("tools.validate_evidence.load", return_value=rows):
+            with self.assertRaisesRegex(ValueError, "correlation must be the last"):
+                correlation(Path("unused"), "case.jsonl", None, {"100103": 3, "100110": 1})
+
+    def test_ssh_intermediate_source_outside_window_is_rejected(self):
+        for source_time in ("17:00:00", "17:16:00", "17:12:07"):
+            with self.subTest(source_time=source_time):
+                rows = self.ssh_fixture()
+                self.replace_ssh_source_time(rows, 3, source_time)
+                with patch("tools.validate_evidence.load", return_value=rows):
+                    with self.assertRaisesRegex(ValueError, "source time window"):
+                        ssh(Path("unused"))
+
+    def test_ssh_source_window_uses_all_events_without_requiring_source_order(self):
+        rows = self.ssh_fixture()
+        self.replace_ssh_source_time(rows, 3, "17:12:08")  # 119 seconds before the last source.
+        with patch("tools.validate_evidence.load", return_value=rows):
+            self.assertEqual(len(ssh(Path("unused"))), 8)
+
+    def replace_ssh_source_time(self, rows, index, source_time):
+        old = rows[index]["full_log"]
+        new = "Oct 16 " + source_time + old[15:]
+        rows[index]["full_log"] = new
+        rows[-1]["previous_output"] = rows[-1]["previous_output"].replace(old, new)
 
     def test_correlation_single_computer_passes(self):
         correlation(self.fixtures, "correlation-whoami-three.alerts.jsonl", None, {"100103": 3})

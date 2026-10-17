@@ -70,9 +70,9 @@ python tools/generate_report.py tests/fixtures report.html
 
 Choose a new output filename when regenerating a report. The program refuses to overwrite an existing file. Report content is in French, matching the lab's analyst notes; it decodes Base64 as text and never executes it.
 
-**Local validation:** **39 unit tests**, four archived-configuration checks and seven evidence checks pass. Tests include rejection of mixed-computer discovery cases and mismatched task source fields. The real SSH engine replay was performed separately on the Wazuh server.
+**Local validation:** **46 unit tests**, four archived-configuration checks and seven evidence checks pass. Tests cover source process data, the recorded discovery alert order, the full SSH source-time window, endpoint identity and task source fields. The real SSH engine replay was performed separately on the Wazuh server.
 
-**GitHub Actions:** [a successful published run](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions/runs/38967682383) checked the earlier 33-test revision, archived configurations, evidence and report generation. See [Actions](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions) for later revisions. Unit tests mock the Wazuh subprocess and cannot replace the recorded real-engine replay.
+**GitHub Actions:** the workflow runs unit tests, archived-configuration checks, evidence checks and report generation. A [successful published run](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions/runs/38971208811) is preserved for reference; see [Actions](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions) for each revision's result. Unit tests mock the Wazuh subprocess and cannot replace the recorded real-engine replay.
 
 ## Important boundaries
 

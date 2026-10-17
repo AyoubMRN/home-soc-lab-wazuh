@@ -36,4 +36,4 @@ See the [recorded replay](../evidence/replay-ssh/README.md). Do not confuse a fr
 
 ## GitHub Actions
 
-The workflow uses Python 3.13 on an Ubuntu runner with read-only repository permissions, no lab credentials and no access to the VM network. It runs unit tests, configuration checks, evidence checks and report generation. It does not call replay_ssh.py or prove an end-to-end deployment. A [published run succeeded](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions/runs/38967682383) on the earlier 33-test revision; the [Actions page](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions) records subsequent runs.
+The workflow uses Python 3.13 on an Ubuntu runner with read-only repository permissions, no lab credentials and no access to the VM network. It runs unit tests, configuration checks, evidence checks and report generation. It does not call replay_ssh.py or prove an end-to-end deployment. A [successful published run](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions/runs/38971208811) is preserved for reference; the [Actions page](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions) records each revision's result.

@@ -24,6 +24,8 @@ The Wazuh agent is named `Windows-Endpoint`, while the Windows source field `win
 
 The fixtures named correlation-*.alerts.jsonl preserve these cases. Display sorting does not change original file order. Times in the HTML report measure alert timestamps, not the engine's internal correlation clock.
 
+The validator compares the decoded process data (including image and command) with each original full_log. For the two positive cases, it also requires 100110 to be the last alert by timestamp, strictly later than the other alerts. File order itself is not a chronology requirement. These checks validate this recorded corpus, not a universal four-event detector threshold.
+
 ## Interpretation and limits
 
 frequency=7 is an empirical setting: it produced a fourth-event correlation in these close tests, following unexpected counting/history behaviour in earlier attempts. The root cause remains unresolved. Do not describe this as a portable, precisely four-command production detector. Selected negative exports cannot prove exhaustive collection. No successful Windows EventChannel engine replay was obtained.

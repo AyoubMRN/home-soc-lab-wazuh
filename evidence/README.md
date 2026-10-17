@@ -10,4 +10,4 @@ The originals and discarded duplicates remain private. Masks do not change test 
 - replay-ssh/ contains real-engine historical output, distinct from unit-test mocks.
 - The V1 screenshots remain under docs/screenshots/ to preserve existing scenario links and historical context.
 
-Local OCR of the original lot and a visual review of the selected images supported the privacy check. No identified secret is knowingly included; this does not guarantee that every possible sensitive fact has been found. The full private archives, enrollment files and original user-path terminal captures are not copied into this preview.
+Local OCR of the original lot and a visual review of the selected images supported the privacy check. No identified secret is knowingly included; this does not guarantee that every possible sensitive fact has been found. The full private archives, enrollment files and original user-path terminal captures are excluded from this repository.

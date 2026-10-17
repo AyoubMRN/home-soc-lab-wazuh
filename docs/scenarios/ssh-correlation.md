@@ -15,6 +15,8 @@ The archived native rule 5763 uses if_matched_sid 5760, same_source_ip, frequenc
 
 The fixture contains eight alerts, including all eight full_log source lines and the final previous_output. The validator compares its seven history lines with the seven preceding failures and checks source identity, uniqueness and source-time interval.
 
+The source-time interval is the latest minus the earliest of all eight source timestamps, and must be strictly below 120 seconds for this corpus. An intermediate event outside that interval is rejected even if the first and last alert entries look close together. This file check does not test the real engine's timing boundary.
+
 ## Real-engine replay
 
 The runner was executed on the actual Wazuh manager in two separate logtest sessions: seven source events gave seven 5760/5 results; eight gave seven 5760/5 then 5763/10. It performs no SSH connection or configuration change. [Inputs, outputs and provenance](../../evidence/replay-ssh/README.md).

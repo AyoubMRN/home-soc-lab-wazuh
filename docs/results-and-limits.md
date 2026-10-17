@@ -19,7 +19,7 @@ These are observations from authorised lab tests on 15–16 October 2026, plus t
 2. File checks examine selected XML settings and evidence consistency, without executing a detection engine.
 3. The recorded SSH replay actually invoked wazuh-logtest on the manager. Its original outputs are in evidence/replay-ssh. No successful Windows EventChannel engine replay is established.
 
-The initial suite had 32 unit tests; the first publication added a rule-extract regression check. The current suite has 39 tests, including rejection of mixed or empty computer identities and task provider, source-time and channel mismatches. A [GitHub CI run succeeded](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions/runs/38967682383) on the earlier 33-test revision. Later results are recorded in [Actions](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions).
+The current suite has 46 unit tests. Regression checks cover the five-rule extract, computer identity, source process data, the final position of the discovery correlation alert, task source fields and the full SSH source-time window. Earlier screenshots showing 32 tests remain historical evidence. A [successful GitHub CI run](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions/runs/38971208811) is preserved for reference; each revision's result is recorded in [Actions](https://github.com/AyoubMRN/home-soc-lab-wazuh/actions).
 
 ## Unresolved limitations
 
