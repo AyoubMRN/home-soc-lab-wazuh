@@ -14,7 +14,7 @@ V1 established the three-VM setup, Windows/Linux collection, eight scenario page
 
 The last public V1 state is [commit f13f2e7](https://github.com/AyoubMRN/home-soc-lab-wazuh/tree/f13f2e7570baa49a2699d6f3975b3c6383155d6e). Its full files and README remain available there. The current tree retains the useful V1 scenario pages, screenshots, Ubuntu settings and results, labelled as historical observations.
 
-V2 is published on main. V1 is linked by commit rather than a version tag; the original commits have not been rewritten.
+V2 is published on main. V1 is linked by commit rather than a version tag. Commit email metadata was anonymised on 17 October 2026; the links above use the rewritten history. Recorded evidence files were preserved.
 
 ## Rules are cumulative, not additive installations
 
